@@ -22,7 +22,19 @@
  * @param argv
  * @return
  */
+
 int main (int argc, const char * argv[] ) {
+
+    close(STDIN_FILENO);
+    int fr = open(argv[1],O_RDONLY);
+    int operaciones = 0;
+
+    scanf("%d",&operaciones);
+
+    printf("%d\n",operaciones);
+
+    struct element elements[operaciones];
+
 
     int total = 0;
     printf("Total: %i €.\n", total);
