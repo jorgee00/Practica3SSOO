@@ -31,24 +31,24 @@ void * thread(void *arg);
 
 int main (int argc, const char * argv[] ){
     if(argc!=4){
-        ///TODO mensaje error
+        write(2,"El numero de argumentos no es valido\n",37);
         return -1;
     }
     int numThreads = atoi(argv[2]);
-    int bufferSize = atoi(argv[3]);
     if(numThreads<=0){
-        ///TODO mensaje error
+        write(2,"El numero de hilos debe de ser mayor que 0\n",43);
         return -1;
     }
+    int bufferSize = atoi(argv[3]);
     if(bufferSize<=0){
-        ///TODO mensaje error
+        write(2,"El tamaño del buffer ha de ser mayor que 0\n",43);
         return -1;
     }
 
     close(STDIN_FILENO);
     int fr = open(argv[1],O_RDONLY);
     if(fr==-1){
-        ///TODO mensaje error
+        write(2,"No se ha podido abrir el fichero indicado\n",43);
         return -1;
     }
     int operaciones = 0;
@@ -64,11 +64,12 @@ int main (int argc, const char * argv[] ){
         ///TODO
     }
 
-    int *buffer =  malloc(operaciones *  sizeof(struct element));
+    struct element *buffer =  malloc(operaciones *  sizeof(struct element));
     for(int i = 0; i<operaciones; i++){
         struct element elem;
         a = scanf("%d %d %d\n",&indices,&elem.type,&elem.time);
         if(a == -1) break;
+        buffer[i] = elem;
     }
 
     if(a==-1){
