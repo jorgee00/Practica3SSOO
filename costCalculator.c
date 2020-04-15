@@ -10,12 +10,12 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
+#include <semaphore.h>
 
 #define NUM_CONSUMERS 1
 
 struct queue * q;
-
+sem_t sem1;
 
 struct args {
     int start; //First index to read
@@ -76,20 +76,33 @@ int main (int argc, const char * argv[] ){
         ///TODO
         return -1;
     }
-    int numHilos = (operaciones>numThreads)?operaciones:numThreads;
+    int numHilos = (operaciones>numThreads)?numThreads:operaciones;
     pthread_t hilos [numHilos];
     struct args * Args = (struct args *) malloc(sizeof(struct args));
-    int rodaja = 0;
+    int rodaja = operaciones/numHilos;
     int restante = operaciones;
 
     q = queue_init(bufferSize);
+    printf("%i\n", numHilos);
+    sem_init(&sem1,0,1);
 
     for(int i = 0; i< numHilos; i++){
+        /*
         restante = restante - rodaja;
         rodaja = (restante)/(numHilos-i);
-
+        printf("%i\n",i);
         Args->start = operaciones -  restante;
         Args->end = operaciones -  restante + rodaja -1;
+        print()
+         */
+        sem_wait(&sem1);
+        Args->start = rodaja*i;
+        if(i==numHilos-1)
+            Args->end = operaciones -1;
+        else{
+            Args->end = rodaja*(i+1)-1;
+        }
+
         pthread_create(&hilos[i],NULL,&thread,Args);
     }
 
@@ -104,9 +117,16 @@ int main (int argc, const char * argv[] ){
 }
 
 void * thread(void *arg){
-    for(int i = ((struct args*)arg)->start; i<((struct args*)arg)->end; i++){
-        printf("%d",i);
+    struct args* args = arg;
+    int start = args->start;
+    int end = args->end;
+    sem_post(&sem1);
+
+    for(int i = start; i<end; i++){
+        //printf("Hilo %d\n",i);
     }
+    printf("Inicio: %i\n",start);
+    printf("Fin: %i\n", end);
 }
 
 
