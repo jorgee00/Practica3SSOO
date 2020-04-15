@@ -9,7 +9,11 @@ struct element {
 
 typedef struct queue {
 	// Define the struct yourself
-	int param1;
+    int size;//tamaño del buffer
+	int length;//numeros de elemntos ocupados
+	int readIndex;// Posicion de lectura
+	int writeIndex;// Posicion de escritura
+	struct element*;//Array de elementos
 }queue;
 
 queue* queue_init (int size);
