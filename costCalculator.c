@@ -80,30 +80,18 @@ int main (int argc, const char * argv[] ){
     int numHilos = (operaciones>numThreads)?numThreads:operaciones;
     pthread_t hilos [numHilos];
     struct args * Args = (struct args *) malloc(sizeof(struct args));
-    int rodaja = operaciones/numHilos;
+    int rodaja = 0;
     int restante = operaciones;
 
     q = queue_init(bufferSize);
-    printf("%i\n", numHilos);
     sem_init(&sem1,0,1);
 
     for(int i = 0; i< numHilos; i++){
-        /*
+        sem_wait(&sem1);
         restante = restante - rodaja;
         rodaja = (restante)/(numHilos-i);
-        printf("%i\n",i);
         Args->start = operaciones -  restante;
         Args->end = operaciones -  restante + rodaja -1;
-        print()
-         */
-        sem_wait(&sem1);
-        Args->start = rodaja*i;
-        if(i==numHilos-1)
-            Args->end = operaciones -1;
-        else{
-            Args->end = rodaja*(i+1)-1;
-        }
-
         pthread_create(&hilos[i],NULL,&thread,Args);
     }
 
