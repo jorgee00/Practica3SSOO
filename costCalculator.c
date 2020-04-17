@@ -15,7 +15,7 @@
 #define NUM_CONSUMERS 1
 
 struct queue * q;
-sem_t sem1;
+struct element *buffer;
 
 struct args {
     int start; //First index to read
@@ -35,11 +35,11 @@ int main (int argc, const char * argv[] ){
         return -1;
     }
     int numThreads = atoi(argv[2]);
+    int bufferSize = atoi(argv[3]);
     if(numThreads<=0){
         write(2,"El numero de hilos debe de ser mayor que 0\n",43);
         return -1;
     }
-    int bufferSize = atoi(argv[3]);
     if(bufferSize<=0){
         write(2,"El tamaño del buffer ha de ser mayor que 0\n",43);
         return -1;
@@ -64,7 +64,7 @@ int main (int argc, const char * argv[] ){
         ///TODO
     }
 
-    struct element *buffer =  malloc(operaciones *  sizeof(struct element));
+    buffer =  malloc(operaciones *  sizeof(struct element));
     for(int i = 0; i<operaciones; i++){
         struct element elem;
         a = scanf("%d %d %d\n",&indices,&elem.type,&elem.time);
@@ -77,9 +77,10 @@ int main (int argc, const char * argv[] ){
         ///TODO
         return -1;
     }
+
     int numHilos = (operaciones>numThreads)?numThreads:operaciones;
     pthread_t hilos [numHilos];
-    struct args * Args = (struct args *) malloc(sizeof(struct args));
+    struct args * Args;
     int rodaja = 0;
     int restante = operaciones;
 
@@ -87,7 +88,7 @@ int main (int argc, const char * argv[] ){
     sem_init(&sem1,0,1);
 
     for(int i = 0; i< numHilos; i++){
-        sem_wait(&sem1);
+        Args  = (struct args *) malloc(sizeof(struct args));
         restante = restante - rodaja;
         rodaja = (restante)/(numHilos-i);
         Args->start = operaciones -  restante;
@@ -109,13 +110,13 @@ void * thread(void *arg){
     struct args* args = arg;
     int start = args->start;
     int end = args->end;
-    sem_post(&sem1);
+    free(args);
 
-    for(int i = start; i<end; i++){
-        //printf("Hilo %d\n",i);
+    for(int i = start; i<=end; i++) {
+        struct element elem = buffer[i];
+        printf("Indice: %i Tipo: %i Tiempo %i\n", i, elem.type, elem.time);
     }
-    printf("Inicio: %i\n",start);
-    printf("Fin: %i\n", end);
+    pthread_exit(0);
 }
 
 
