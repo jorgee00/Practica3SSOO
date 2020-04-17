@@ -9,12 +9,20 @@
 //To create a queue
 queue* queue_init(int size){
     queue * q = (queue *) malloc(sizeof(queue));
+    q->size = size;
+    q->readIndex = 0;
+    q->writeIndex = 0;
+    q->length = 0;
+    q->array = malloc(sizeof(struct element)*size);
     return q;
 }
 
 
 // To Enqueue an element
 int queue_put(queue *q, struct element* x) {
+    while(queue_full(q)){
+    }
+    arr
     return 0;
 }
 
@@ -29,13 +37,11 @@ struct element* queue_get(queue *q) {
 
 //To check queue state
 int queue_empty(queue *q){
-    
-    return 0;
+    return q->length==0;
 }
 
 int queue_full(queue *q){
-    
-    return 0;
+    return q->size==q->length;
 }
 
 //To destroy the queue and free the resources
