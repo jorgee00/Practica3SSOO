@@ -14,6 +14,9 @@ typedef struct queue {
 	int readIndex;// Posicion de lectura
 	int writeIndex;// Posicion de escritura
 	struct element* array;//Array de elementos
+    pthread_mutex_t esritura; //Mutex para manejar la concurrrencia a la hora de escribir
+    pthread_cond_t empty; // Condition indicating queue is empty
+    //pthread_mutex_t esritura;
 }queue;
 
 queue* queue_init (int size);
@@ -22,5 +25,6 @@ int queue_put (queue *q, struct element* elem);
 struct element * queue_get(queue *q);
 int queue_empty (queue *q);
 int queue_full(queue *q);
+
 
 #endif

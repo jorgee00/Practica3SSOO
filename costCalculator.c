@@ -16,7 +16,7 @@
 
 struct queue * q;
 struct element *buffer;
-
+int operaciones;
 struct args {
     int start; //First index to read
     int end; //Last index to read
@@ -27,7 +27,8 @@ struct args {
  * @param argv
  * @return
  */
-void * thread(void *arg);
+void * productor(void *arg);
+void * consumidor(void *arg);
 
 int main (int argc, const char * argv[] ){
     if(argc!=4){
@@ -51,7 +52,7 @@ int main (int argc, const char * argv[] ){
         write(2,"No se ha podido abrir el fichero indicado\n",43);
         return -1;
     }
-    int operaciones = 0;
+
     int indices;
     int a;
     a = scanf("%d\n",&operaciones);
@@ -85,7 +86,6 @@ int main (int argc, const char * argv[] ){
     int restante = operaciones;
 
     q = queue_init(bufferSize);
-    sem_init(&sem1,0,1);
 
     for(int i = 0; i< numHilos; i++){
         Args  = (struct args *) malloc(sizeof(struct args));
@@ -93,9 +93,10 @@ int main (int argc, const char * argv[] ){
         rodaja = (restante)/(numHilos-i);
         Args->start = operaciones -  restante;
         Args->end = operaciones -  restante + rodaja -1;
-        pthread_create(&hilos[i],NULL,&thread,Args);
+        pthread_create(&hilos[i], NULL, &productor, Args);
     }
-
+    pthread_t consumidor;
+    pthread_create(&consumidor,NULL,&consumidor,NULL);
     for(int i = 0; i< numHilos; i++){
         pthread_join(hilos[i],NULL);
     }
@@ -106,7 +107,7 @@ int main (int argc, const char * argv[] ){
     return 0;
 }
 
-void * thread(void *arg){
+void * productor(void *arg){
     struct args* args = arg;
     int start = args->start;
     int end = args->end;
@@ -114,9 +115,16 @@ void * thread(void *arg){
 
     for(int i = start; i<=end; i++) {
         struct element elem = buffer[i];
+        queue_put(q,&elem);
         printf("Indice: %i Tipo: %i Tiempo %i\n", i, elem.type, elem.time);
     }
     pthread_exit(0);
+}
+
+void * consumidor(void * arg){
+    for(int i =0; i<operaciones; i++){
+
+    }
 }
 
 
