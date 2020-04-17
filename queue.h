@@ -13,7 +13,7 @@ typedef struct queue {
 	int length;//numeros de elemntos ocupados
 	int readIndex;// Posicion de lectura
 	int writeIndex;// Posicion de escritura
-	struct element*;//Array de elementos
+	struct element* array;//Array de elementos
 }queue;
 
 queue* queue_init (int size);
