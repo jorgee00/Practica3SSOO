@@ -12,6 +12,9 @@
 #include <sys/wait.h>
 #include <semaphore.h>
 
+
+
+
 #define NUM_CONSUMERS 1
 
 struct queue * q;
@@ -100,6 +103,7 @@ int main (int argc, const char * argv[] ){
     for(int i = 0; i< numHilos; i++){
         pthread_join(hilos[i],NULL);
     }
+
     void *result;
     pthread_join(consumidor, &result);
 
@@ -116,9 +120,9 @@ void * productor(void *arg){
     free(args);
 
     for(int i = start; i<=end; i++) {
-        struct element elem = buffer[i];
-        queue_put(q,&elem);
-        printf("Indice: %i Tipo: %i Tiempo %i\n", i, elem.type, elem.time);
+        struct element* elem = &buffer[i];
+        queue_put(q,elem);
+
     }
     pthread_exit(0);
 }

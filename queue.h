@@ -15,7 +15,8 @@ typedef struct queue {
 	int writeIndex;// Posicion de escritura
 	struct element* array;//Array de elementos
     pthread_mutex_t esritura; //Mutex para manejar la concurrrencia a la hora de escribir
-    pthread_cond_t empty; // Condition indicating queue is empty
+    pthread_cond_t no_lleno; // Condition indicating queue is no_lleno
+    pthread_cond_t no_vacio;  // Condition indicating queue is no_vacio
     //pthread_mutex_t esritura;
 }queue;
 
