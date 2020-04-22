@@ -28,7 +28,7 @@ struct args {
  * @return
  */
 void * productor(void *arg);
-void * consumidor(void *arg);
+void * funcionConsumidor(void *arg);
 
 int main (int argc, const char * argv[] ){
     if(argc!=4){
@@ -96,12 +96,14 @@ int main (int argc, const char * argv[] ){
         pthread_create(&hilos[i], NULL, &productor, Args);
     }
     pthread_t consumidor;
-    pthread_create(&consumidor,NULL,&consumidor,NULL);
+    pthread_create(&consumidor,NULL,&funcionConsumidor,NULL);
     for(int i = 0; i< numHilos; i++){
         pthread_join(hilos[i],NULL);
     }
+    void *result;
+    pthread_join(consumidor, &result);
 
-    int total = 0;
+    int total = *((int *) result);
     printf("Total: %i €.\n", total);
 
     return 0;
@@ -121,10 +123,26 @@ void * productor(void *arg){
     pthread_exit(0);
 }
 
-void * consumidor(void * arg){
+void * funcionConsumidor(void * arg){
+    int * acumulador = 0;
     for(int i =0; i<operaciones; i++){
-
+        struct element * elem = queue_get(q);
+        switch(elem->type){
+            case 1:
+                *acumulador += elem->time;
+                break;
+            case 2:
+                *acumulador += 3*elem->time;
+                break;
+            case 3:
+                *acumulador += 10*elem->time;
+                break;
+            default:
+                //TODO error
+                pthread_exit((void *) -1);
+        }
     }
+    pthread_exit(acumulador);
 }
 
 
