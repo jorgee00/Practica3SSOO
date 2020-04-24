@@ -50,7 +50,6 @@ int queue_put(queue *q, struct element* x) {
     while(queue_full(q)){
         pthread_cond_wait(&q->no_lleno, &q->esritura);
     }
-    write(1,"1\n", 2);
     q->array[q->writeIndex].time = x->time;
     q->array[q->writeIndex].type = x->type;
     q->writeIndex = (q->writeIndex+1)%q->size;
@@ -73,7 +72,6 @@ struct element* queue_get(queue *q) {
     element->type = q->array[q->readIndex].type;
     q->readIndex =(q->readIndex+1)%q->size;
     q->length--;
-    write(1,"2\n", 2);
     pthread_cond_signal(&q->no_lleno);
     pthread_mutex_unlock(&q->esritura);
     return element;
