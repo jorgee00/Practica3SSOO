@@ -20,6 +20,7 @@
 struct queue * q;
 struct element *buffer;
 int operaciones;
+
 struct args {
     int start; //First index to read
     int end; //Last index to read
@@ -48,7 +49,6 @@ int main (int argc, const char * argv[] ){
         write(2,"El tamaño del buffer ha de ser mayor que 0\n",43);
         return -1;
     }
-
     close(STDIN_FILENO);
     int fr = open(argv[1],O_RDONLY);
     if(fr==-1){
@@ -107,8 +107,8 @@ int main (int argc, const char * argv[] ){
     void *result;
     pthread_join(consumidor, &result);
 
-    int total = *((int *) result);
-    printf("Total: %i €.\n", total);
+    //int total = *((int *) result);
+    printf("Total: %i €.\n", (int)result);
 
     return 0;
 }
@@ -118,35 +118,34 @@ void * productor(void *arg){
     int start = args->start;
     int end = args->end;
     free(args);
-
     for(int i = start; i<=end; i++) {
         struct element* elem = &buffer[i];
         queue_put(q,elem);
-
     }
     pthread_exit(0);
 }
 
 void * funcionConsumidor(void * arg){
-    int * acumulador = 0;
+    int  acumulador = 0;
+
     for(int i =0; i<operaciones; i++){
         struct element * elem = queue_get(q);
         switch(elem->type){
             case 1:
-                *acumulador += elem->time;
+                acumulador += elem->time;
                 break;
             case 2:
-                *acumulador += 3*elem->time;
+                acumulador += 3*elem->time;
                 break;
             case 3:
-                *acumulador += 10*elem->time;
+                acumulador += 10*elem->time;
                 break;
             default:
                 //TODO error
                 pthread_exit((void *) -1);
         }
     }
-    pthread_exit(acumulador);
+    pthread_exit((void *)acumulador);
 }
 
 

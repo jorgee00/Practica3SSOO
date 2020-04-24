@@ -23,7 +23,7 @@ queue* queue_init(int size){
     q->readIndex = 0;
     q->writeIndex = 0;
     q->length = 0;
-    q->array =  malloc(sizeof(struct element)*size);
+    q->array = (struct element*) malloc(sizeof(struct element)*size);
     for(int i = 0; i<size; i++){
         q->array[i] = *(struct element *)(malloc(sizeof(struct element)));
     }
