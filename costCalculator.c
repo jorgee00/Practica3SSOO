@@ -104,11 +104,11 @@ int main (int argc, const char * argv[] ){
         pthread_join(hilos[i],NULL);
     }
 
-    void *result;
-    pthread_join(consumidor, &result);
+    int *result;
+    pthread_join(consumidor, (void **)&result);
 
     //int total = *((int *) result);
-    printf("Total: %i €.\n", (int)result);
+    printf("Total: %i €.\n", *result);
 
     return 0;
 }
@@ -126,26 +126,26 @@ void * productor(void *arg){
 }
 
 void * funcionConsumidor(void * arg){
-    int  acumulador = 0;
-
+    int  *acumulador = (int *) malloc(sizeof(int));
+    *acumulador = 0;
     for(int i =0; i<operaciones; i++){
         struct element * elem = queue_get(q);
         switch(elem->type){
             case 1:
-                acumulador += elem->time;
+                *acumulador = *acumulador + elem->time;
                 break;
             case 2:
-                acumulador += 3*elem->time;
+                *acumulador = *acumulador + 3*elem->time;
                 break;
             case 3:
-                acumulador += 10*elem->time;
+                *acumulador = *acumulador + 10*elem->time;
                 break;
             default:
                 //TODO error
                 pthread_exit((void *) -1);
         }
     }
-    pthread_exit((void *)acumulador);
+    pthread_exit(acumulador);
 }
 
 
