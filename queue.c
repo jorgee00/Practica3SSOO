@@ -75,6 +75,7 @@ struct element* queue_get(queue *q) {
     //Desbloqueamos el mutex y la variable condicion
     pthread_cond_signal(&q->no_full);
     pthread_mutex_unlock(&q->write);
+    //DEvuelve el elemento
     return element;
 }
 
