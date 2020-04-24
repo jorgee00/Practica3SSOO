@@ -1,21 +1,11 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stddef.h>
-#include <sys/stat.h>
 #include <pthread.h>
 #include "queue.h"
-#include <string.h>
 #include <sys/types.h>
-#include <sys/wait.h>
-#include <semaphore.h>
-
-
-
-
-#define NUM_CONSUMERS 1
 
 struct queue * q;
 struct element *buffer;
@@ -23,7 +13,7 @@ int operaciones;
 
 struct args {
     int start; //First index to read
-    int end; //Last index to read
+    int end;   //Last index to read
 };
 /**
  * Entry point
@@ -60,12 +50,12 @@ int main (int argc, const char * argv[] ){
     int a;
     a = scanf("%d\n",&operaciones);
     if(a == -1){
-        ///TODO mensaje error
+        write(STDERR_FILENO,"Error al leer del fichero indicado\n",35);
         return -1;
     }
 
     if(operaciones<1){
-        ///TODO
+        write(STDERR_FILENO,"Número de operaciones inválido\n",32);
     }
 
     buffer =  malloc(operaciones *  sizeof(struct element));
@@ -78,7 +68,7 @@ int main (int argc, const char * argv[] ){
 
     if(a==-1){
         free(buffer);
-        ///TODO
+        write(STDERR_FILENO,"Error al leer del fichero indicado\n",35);
         return -1;
     }
 
@@ -106,8 +96,6 @@ int main (int argc, const char * argv[] ){
 
     int *result;
     pthread_join(consumidor, (void **)&result);
-
-    //int total = *((int *) result);
     printf("Total: %i €.\n", *result);
 
     return 0;
@@ -141,7 +129,7 @@ void * funcionConsumidor(void * arg){
                 *acumulador = *acumulador + 10*elem->time;
                 break;
             default:
-                //TODO error
+                write(STDOUT_FILENO,"Tipo de máquina inválido\n",25);
                 pthread_exit((void *) -1);
         }
     }
