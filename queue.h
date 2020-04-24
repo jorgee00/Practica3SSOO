@@ -3,8 +3,8 @@
 
 
 struct element {
-  int type; //Machine type
-  int time; //Using time
+  int type; //Tipo de maquina
+  int time; //Tiempo de uso
 };
 
 typedef struct queue {
@@ -14,10 +14,10 @@ typedef struct queue {
 	int readIndex;// Posicion de lectura
 	int writeIndex;// Posicion de escritura
 	struct element* array;//Array de elementos
-    pthread_mutex_t esritura; //Mutex para manejar la concurrrencia a la hora de escribir
-    pthread_cond_t no_lleno; // Condition indicating queue is no_lleno
-    pthread_cond_t no_vacio;  // Condition indicating queue is no_vacio
-    //pthread_mutex_t esritura;
+    pthread_mutex_t write; //Mutex para manejar la concurrrencia a la hora de escribir
+    pthread_cond_t no_full; //Variable condcion que indica que no esta lleno
+    pthread_cond_t no_empty;  //Variable condcion que indica que no esta vacio
+
 }queue;
 
 queue* queue_init (int size);
