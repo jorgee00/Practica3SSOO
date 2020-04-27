@@ -67,6 +67,7 @@ int main (int argc, const char * argv[] ){
     //Comprobamos el número de operaciones indicado
     if(operaciones<1){
         write(STDERR_FILENO,"Número de operaciones inválido\n",32);
+        return -1;
     }
 
     //Creamos un array de elementos, y lo rellenamos con los datos del fichero
