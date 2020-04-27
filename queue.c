@@ -92,9 +92,6 @@ int queue_full(queue *q){
 
 //Destruye la cola y todos sus elementos
 int queue_destroy(queue *q){
-    for(int i = 0; 1 < q->size; i++ ){
-        free(&q->array[i]);
-    }
     free(q->array);
     pthread_cond_destroy(&q->no_empty);
     pthread_cond_destroy(&q->no_full);

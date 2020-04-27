@@ -72,13 +72,12 @@ int main (int argc, const char * argv[] ){
     //Creamos un array de elementos, y lo rellenamos con los datos del fichero
     buffer =  malloc(operaciones *  sizeof(struct element));
     for(int i = 0; i<operaciones; i++){
-        struct element elem;
-        fd = scanf("%d %d %d\n", &indices, &elem.type, &elem.time);
+        buffer[i] = *(struct element*)malloc(sizeof(struct element));
+        fd = scanf("%d %d %d\n", &indices, &buffer[i].type, &buffer[i].time);
         if(fd == -1) break;
-        buffer[i] = elem;
     }
 
-    //Comprobamos la lectura del fichero
+    //Comprobamos la lectura del fichero, de ser errónea se libera la memoria del buffer
     if(fd == -1){
         free(buffer);
         write(STDERR_FILENO,"Error al leer del fichero indicado\n",35);
@@ -119,8 +118,11 @@ int main (int argc, const char * argv[] ){
     //Recogemos el resultado del hilo consumidor, lo imprimimos y liberamos la cola
     int *result;
     pthread_join(consumidor, (void **)&result);
-    queue_destroy(q);
     printf("Total: %i €.\n", *result);
+
+    //Liberamos memoria
+    free(buffer);
+    queue_destroy(q);
 
     return 0;
 }
@@ -138,7 +140,6 @@ void * productor(void *arg){
     }
     pthread_exit(0);
 }
-
 
 //Hilo consumidor
 void * funcionConsumidor(void * arg){
@@ -165,5 +166,3 @@ void * funcionConsumidor(void * arg){
     }
     pthread_exit(acumulador);
 }
-
-
