@@ -106,6 +106,7 @@ int main (int argc, const char * argv[] ){
     int restante = operaciones;
 
     //Inicializamos el buffer circular
+    bufferSize = (operaciones>bufferSize)?numThreads:bufferSize;
     q = queue_init(bufferSize);
 
     //Inicializamos los hilos productores, y les asignamos un índice de comienzo y de fin de lectura através de la estructura Args
