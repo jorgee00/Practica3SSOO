@@ -5,7 +5,6 @@
 #include <pthread.h>
 #include <unistd.h>
 
-
 //Metodo para inicializar el buffer circular
 queue* queue_init(int size){
     //Reservamos el tamaño de la estructura

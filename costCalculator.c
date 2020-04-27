@@ -118,12 +118,14 @@ int main (int argc, const char * argv[] ){
     //Recogemos el resultado del hilo consumidor, lo imprimimos y liberamos la cola
     int *result;
     pthread_join(consumidor, (void **)&result);
-    printf("Total: %i €.\n", *result);
-
     //Liberamos memoria
     free(buffer);
     queue_destroy(q);
 
+    if(*result == -1)
+        return -1;
+
+    printf("Total: %i €.\n", *result);
     return 0;
 }
 
