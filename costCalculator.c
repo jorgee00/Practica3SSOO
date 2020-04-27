@@ -85,7 +85,7 @@ int main (int argc, const char * argv[] ){
     //Comprobamos la lectura del fichero, de ser errónea se libera la memoria del buffer
     if(fd == -2){
         free(buffer);
-        write(STDERR_FILENO,"El formato del fichero no es válido\n",37);
+        write(STDERR_FILENO,"El contenido del fichero no es válido\n",39);
         return -1;
     }
 
