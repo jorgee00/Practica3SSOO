@@ -55,7 +55,7 @@ int main (int argc, const char * argv[] ){
         return -1;
     }
 
-    int indices;
+
     //Leemos la primera línea del fichero y almacena el valor en operaciones, comprobamos la lectura
     int fd;
     fd = scanf("%d\n", &operaciones);
@@ -66,16 +66,27 @@ int main (int argc, const char * argv[] ){
 
     //Comprobamos el número de operaciones indicado
     if(operaciones<1){
-        write(STDERR_FILENO,"Número de operaciones inválido\n",32);
+        write(STDERR_FILENO,"Número de operaciones inválido\n",33);
         return -1;
     }
 
     //Creamos un array de elementos, y lo rellenamos con los datos del fichero
+    int indices;
     buffer =  malloc(operaciones *  sizeof(struct element));
     for(int i = 0; i<operaciones; i++){
         buffer[i] = *(struct element*)malloc(sizeof(struct element));
         fd = scanf("%d %d %d\n", &indices, &buffer[i].type, &buffer[i].time);
         if(fd == -1) break;
+        if(buffer[i].time <= 0 || buffer[i].type <= 0 ){
+            fd = -2;
+            break;
+        }
+    }
+    //Comprobamos la lectura del fichero, de ser errónea se libera la memoria del buffer
+    if(fd == -2){
+        free(buffer);
+        write(STDERR_FILENO,"El formato del fichero no es válido\n",37);
+        return -1;
     }
 
     //Comprobamos la lectura del fichero, de ser errónea se libera la memoria del buffer
@@ -163,7 +174,7 @@ void * funcionConsumidor(void * arg){
                 *acumulador = *acumulador + 10*elem->time;
                 break;
             default:
-                write(STDOUT_FILENO,"Tipo de máquina inválido\n",25);
+                write(STDOUT_FILENO,"Tipo de máquina inválido\n",27);
                 pthread_exit((void *) -1);
         }
         //Liberamos el elemento extraido de la cola
