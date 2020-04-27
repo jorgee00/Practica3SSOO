@@ -77,7 +77,7 @@ int main (int argc, const char * argv[] ){
         buffer[i] = *(struct element*)malloc(sizeof(struct element));
         fd = scanf("%d %d %d\n", &indices, &buffer[i].type, &buffer[i].time);
         if(fd == -1) break;
-        if(buffer[i].time <= 0 || buffer[i].type <= 0 ){
+        if(buffer[i].time <= 0 || buffer[i].type <= 0 || buffer[i].type > 3){
             fd = -2;
             break;
         }
