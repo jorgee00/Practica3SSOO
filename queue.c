@@ -19,9 +19,11 @@ queue* queue_init(int size){
     for(int i = 0; i<size; i++){
         q->array[i] = *(struct element *)(malloc(sizeof(struct element)));
     }
+
     //Declaramos el mutex que controla que no se pueda acceder simultaneamente albuffer circular y comprobamos su creacion
     if(pthread_mutex_init(&q->write, NULL) != 0)
         write(2,"Error inicializando el mutex\n", 29);
+
     //Declaramos las variables condicion que hacen que no se lea cuando esta vacio y no se escriba cuando esta lleno y comprobamos su creacion
     if(pthread_cond_init(&q->no_full, NULL) != 0)
         write(2,"Error inicializando la variable condicion no_full\n", 51);

@@ -165,6 +165,8 @@ void * funcionConsumidor(void * arg){
                 write(STDOUT_FILENO,"Tipo de máquina inválido\n",25);
                 pthread_exit((void *) -1);
         }
+        //Liberamos el elemento extraido de la cola
+        free(elem);
     }
     pthread_exit(acumulador);
 }
