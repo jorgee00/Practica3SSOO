@@ -79,7 +79,6 @@ struct element* queue_get(queue *q) {
     return element;
 }
 
-
 //Te indica si la cola esta vacia
 int queue_empty(queue *q){
     return q->length==0;
